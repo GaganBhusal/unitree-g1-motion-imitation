@@ -45,14 +45,13 @@ class EnvConfigs:
     sigma_root_ori: float = 0.5
     sigma_transition: float = 0.5
 
-    # Motion Tracking Link & DOF Weights (Genesis-style targeted weighting)
-    # Body link indices: pelvis(0), left_knee(4), left_ankle(6), right_knee(10), right_ankle(12), torso(13), left_wrist(18), right_wrist(23)
+    # pelvis(0), left_knee(4), left_ankle(6), right_knee(10), right_ankle(12), torso(13), left_wrist(18), right_wrist(23)
     tracking_body_indices: tuple[int, ...] = (0, 4, 6, 10, 12, 13, 18, 23)
-    # Body Position Tracking Weights: high weights on feet (2.0) and knees (1.5)
+    # Body Position Tracking Weights
     tracking_body_pos_weights: tuple[float, ...] = (1.0, 1.5, 2.0, 1.5, 2.0, 1.0, 1.0, 1.0)
-    # Body Orientation Tracking Weights: ankle orientation set to 0.0 (like Genesis) to avoid fighting flat foot ground penalty
+    # Body Orientation Tracking Weights
     tracking_body_ori_weights: tuple[float, ...] = (1.0, 0.5, 0.0, 0.5, 0.0, 2.0, 1.0, 1.0)
-    # Joint DOF tracking weights (23 DOF): prioritize hips and knees over arms
+    # Joint DOF tracking weights
     tracking_dof_weights: tuple[float, ...] = (
         1.5, 1.2, 1.2, 2.0, 1.5, 1.2,  # Left leg: hip_pitch, roll, yaw, knee, ankle_pitch, roll
         1.5, 1.2, 1.2, 2.0, 1.5, 1.2,  # Right leg: hip_pitch, roll, yaw, knee, ankle_pitch, roll
