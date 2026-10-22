@@ -3,6 +3,7 @@
 [![MuJoCo](https://img.shields.io/badge/Simulation-MuJoCo%20Warp%20(Mjlab)-blueviolet.svg)](https://github.com/google-deepmind/mujoco)
 [![Robot](https://img.shields.io/badge/Robot-Unitree%20G1%20(23--DOF)-success.svg)](https://www.unitree.com/g1/)
 [![RL](https://img.shields.io/badge/RL-PPO%20(RslRl)-brightgreen.svg)](https://github.com/leggedrobotics/rsl_rl)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A deep reinforcement learning framework for the **Unitree G1 Humanoid (23-DOF)** to learn and execute multiple highly dynamic motions such as crouches and football kicks under a **single unified neural network policy**.
 
@@ -139,4 +140,4 @@ python -m scripts.train -e g1_multi_motion_v4 --num_envs 4096 --motion_files mot
 
 ## License
 
-This project is released under the MIT License. Based on the Unitree G1 humanoid model and Mjlab framework.
+This project is released under the [MIT License](LICENSE). Based on the Unitree G1 humanoid model and Mjlab framework.
