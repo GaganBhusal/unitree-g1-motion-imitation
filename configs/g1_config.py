@@ -23,7 +23,7 @@ except ImportError:
                 update_assets(assets, f, meshdir, glob, recursive)
 
 G1_XML_PATH = Path(
-    "/home/yayy/My/Codeeeeee/RL_Robotics/unitree_rl_mjlab/src/assets/robots/unitree_g1/xmls/g1_23dof.xml"
+    "assets/xmls/g1_23dof.xml"
 )
 
 
