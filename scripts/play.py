@@ -47,6 +47,7 @@ def play():
 
     env_cfg = make_motion_env_cfg(motion_path=motion_paths, device=device)
     env_cfg.scene.num_envs = 1
+    env_cfg.episode_length_s = 1e10
 
     env = ManagerBasedRlEnv(cfg=env_cfg, device=device)
     vec_env = RslRlVecEnvWrapper(env)
