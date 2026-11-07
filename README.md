@@ -12,22 +12,20 @@ A deep reinforcement learning framework for the **Unitree G1 Humanoid (23-DOF)**
 
 ## Demonstrations
 
+### Unified Multi-Motion Policy (Single Network)
 <p align="center">
   <img src="videos/g1_multi_motion_unified_policy.gif" width="100%" alt="Unified Policy" />
 </p>
 
-<table align="center" width="100%">
-  <tr>
-    <td align="center" width="50%">
-      <b>Motion 1: Spiderman Pose </b><br/>
-      <img src="videos/spiderman.gif" width="100%" alt="Spiderman Pose" />
-    </td>
-    <td align="center" width="50%">
-      <b>Motion 2: Football Kick</b><br/>
-      <img src="videos/kick.gif" width="100%" alt="Football Kick" />
-    </td>
-  </tr>
-</table>
+### Motion 1: Spiderman Pose
+<p align="center">
+  <img src="videos/spiderman.gif" width="100%" alt="Spiderman Pose Pipeline" />
+</p>
+
+### Motion 2: Football Kick
+<p align="center">
+  <img src="videos/kick.gif" width="100%" alt="Football Kick Pipeline" />
+</p>
 
 ---
 
