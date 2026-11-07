@@ -52,30 +52,6 @@ def orientation_upright_reward(
     reward = torch.exp(-error / (sigma_upright ** 2))
     trigger = cmd.trigger.squeeze(-1)
     return reward * (1.0 - trigger)
-# def height_reward(
-#     env,
-#     target_height,
-#     asset_cfg,
-#     command_name="motion_command"
-# ):
-#     asset = env.scene[asset_cfg.name]
-#     cmd = env.command_manager.get_term(command_name)
-#     base_height = asset.data.root_link_pos_w[:, 2]
-#     reward = torch.square(base_height - target_height)
-#     trigger = cmd.trigger.squeeze(-1)
-#     return reward * (1.0 - trigger)
-
-# def linear_vel_z_reward(
-#     env,
-#     asset_cfg,
-#     command_name="motion_command",
-# ):
-#     asset = env.scene[asset_cfg.name]
-#     cmd = env.command_manager.get_term(command_name)
-#     base_lin_vel_body = asset.data.root_link_lin_vel_b
-#     reward = torch.square(base_lin_vel_body[:, 2])
-#     trigger = cmd.trigger.squeeze(-1)
-#     return reward * (1.0 - trigger)
 
 def roll_pitch_velocity_penalty(
     env,
@@ -89,28 +65,23 @@ def roll_pitch_velocity_penalty(
     trigger = cmd.trigger.squeeze(-1)
     return reward * (1.0 - trigger)
 
-# def stand_still_reward(
-#     env,
-#     asset_cfg,
-#     command_name="motion_command",
-# ):
-#     asset = env.scene[asset_cfg.name]
-#     cmd = env.command_manager.get_term(command_name)
-#     current_dof_pos = asset.data.joint_pos
-#     reward = torch.sum(torch.square(current_dof_pos - asset.data.default_joint_pos), dim=1)
-#     trigger = cmd.trigger.squeeze(-1)
-#     return reward * (1.0 - trigger)
-
 def stand_still_reward(
     env,
     asset_cfg,
     command_name="motion_command",
-    sigma_stand: float = 0.3,
+    sigma_stand: float = 0.2,
 ):
     asset = env.scene[asset_cfg.name]
     cmd = env.command_manager.get_term(command_name)
-    error = torch.mean(torch.square(asset.data.joint_pos - asset.data.default_joint_pos), dim=1)
-    reward = torch.exp(-error / (sigma_stand ** 2))
+    diff = asset.data.joint_pos - asset.data.default_joint_pos
+    error_pos = torch.mean(torch.square(diff), dim=1)
+    reward_joint_pos = torch.exp(-error_pos / (sigma_stand ** 2))
+
+    diff_vel = asset.data.joint_vel - asset.data.default_joint_vel
+    error_vel = torch.mean(torch.square(diff_vel), dim=1)
+    reward_joint_vel = torch.exp(-error_vel / 1.0)
+
+    reward = reward_joint_pos * (0.7 + 0.3 * reward_joint_vel)
     trigger = cmd.trigger.squeeze(-1)
     return reward * (1.0 - trigger)
 
@@ -156,17 +127,11 @@ def motion_linear_velocity_tracking_reward(
     motion_lin_vel_w = cmd.motion_lib.get_motion_data("body_lin_vel_w", cmd.motion_frame)[:, 0, :]
     motion_root_quat_w = cmd.motion_lib.get_motion_data("body_quat_w", cmd.motion_frame)[:, 0, :]
 
-    # motion_lin_vel_w = motion_lib.get_motion_data("body_lin_vel_w", env.episode_length_buf)[:, 0, :]
-    # motion_root_quat_w = motion_lib.get_motion_data("body_quat_w", env.episode_length_buf)[:, 0, :]
-
     motion_lin_vel_b = quat_apply_inverse(motion_root_quat_w, motion_lin_vel_w)
     robot_lin_vel_b = asset.data.root_link_lin_vel_b
 
     reward = torch.exp(-torch.sum(torch.square(motion_lin_vel_b - robot_lin_vel_b), dim=1)/ (sigma_lin_vel_tracking ** 2))
     
-    # mask = motion_lib.get_motion_data("data_masking", env.episode_length_buf)
-    # return torch.where((mask > -0.5) & (mask < 0.5), reward, torch.ones_like(reward))
-
     trigger = cmd.trigger.squeeze(-1)
     return reward * trigger
 
@@ -185,9 +150,6 @@ def motion_angular_velocity_tracking_reward(
     robot_ang_vel_b = asset.data.root_link_ang_vel_b
 
     reward = torch.exp(-torch.sum(torch.square(motion_ang_vel_b - robot_ang_vel_b), dim=1)/ (sigma_ang_vel_tracking ** 2))
-
-    # mask = motion_lib.get_motion_data("data_masking", env.episode_length_buf)
-    # return torch.where((mask > -0.5) & (mask < 0.5), reward, torch.ones_like(reward))
 
     trigger = cmd.trigger.squeeze(-1)
     return reward * trigger
@@ -347,8 +309,6 @@ def motion_root_orientation_tracking_reward(
     ori_error = quat_error_magnitude(motion_root_quat_w, robot_root_quat_w) ** 2
     reward = torch.exp(-ori_error / (sigma_root_ori_tracking ** 2))
 
-    # mask = motion_lib.get_motion_data("data_masking", env.episode_length_buf)
-    # return torch.where((mask > -0.5) & (mask < 0.5), reward, torch.ones_like(reward))
     trigger = cmd.trigger.squeeze(-1)
     return reward * trigger
 
