@@ -78,7 +78,6 @@ class MotionLib:
             self.stacked_data[k] = stacked
 
         self.motion_data = {k: self.stacked_data[k][0, :self.num_frames_list[0]] for k in keys}
-        self._show_info()
 
     def get_num_frames(self, motion_idx: int | torch.Tensor = 0) -> int | torch.Tensor:
         if isinstance(motion_idx, torch.Tensor):
